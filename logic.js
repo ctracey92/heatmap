@@ -15781,21 +15781,34 @@ Sample Data:
 
 let data = dataset.monthlyVariance;
 
-const w = 1200;
+const w = 1800;
 const h = 600;
 const padding = 60;
 
-let minDate = d3.min(data, d => d.year);
-let maxDate = d3.max(data, d => d.year);
+const months =[
+	'Jan',
+	'Feb',
+	'Mar',
+	'Apr',
+	'May',
+	'Jun',
+	'Jul',
+	'Aug',
+	'Sep',
+	'Oct',
+	'Nov',
+	'Dec'
+]
 
-console.log(minDate,maxDate)
+let minDate = new Date(data[0].year,data[0].month-1);
+let maxDate = new Date(data[data.length-1].year+5,data[data.length-1].month-1);
 
-const xScale = d3.scaleTime()
-        .domain([new Date(minDate), new Date(maxDate)])
+const xScale = d3.scaleLinear()
+        .domain([data[0].year,data[data.length-1].year+5])
         .range([padding, w-padding])
 
 const yScale = d3.scaleLinear()
-        .domain([12,0])
+        .domain([12.5,.5])
         .range([h-padding,padding])
 
 const svg = d3.select("div").append("svg").attr("height",h).attr("width",w);
@@ -15807,7 +15820,7 @@ svg.selectAll("rect")
     .attr("class","cell")
     .style("height", d => ((h - padding)/12))
     .style("width", 10)
-    .attr("y", (d,i) => yScale(d.month)-padding/1.5)
+    .attr("y", (d,i) => yScale(d.month-.5))
     .attr("x",(d,i) => xScale(d.year))
     .attr("fill", d => {
         if(d.variance + dataset.baseTemperature <= 2.8 ){return "rgb(49, 54, 149)"}
@@ -15822,20 +15835,20 @@ svg.selectAll("rect")
         else if (d.variance + dataset.baseTemperature <= 12.8){return  "rgb(215, 48, 39)"}
         else if (d.variance + dataset.baseTemperature > 12.8){return "rgb(165, 0, 38)"}
     })
-    .attr("data-month",d => d.month)
+    .attr("data-month",d => d.month-1)
     .attr("data-year",d => d.year)
     .attr("data-temp",d => d.variance + dataset.baseTemperature)
 
 
-const yAxis = d3.axisLeft(yScale);
-const xAxis = d3.axisBottom(xScale);
+const yAxis = d3.axisLeft(yScale).tickFormat((d)=>months[d-1])
+const xAxis = d3.axisBottom(xScale).tickFormat(d3.format("d"));
 
 svg.append("g")
     .attr("id", "y-axis")
     .attr("transform", "translate(" + padding + ",0)")
-    .call(yAxis)
+    .call(yAxis.ticks(12))
 
 svg.append("g")
     .attr("id", "x-axis")
     .attr("transform", "translate(0," + (h - padding) + ")")
-    .call(xAxis)
+    .call(xAxis.ticks(20))
