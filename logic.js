@@ -15770,4 +15770,30 @@ const dataset = {
   ],
 };
 
+/*
+Sample Data:
+    {
+      year: 1753,
+      month: 1,
+      variance: -1.366,
+    },
+*/
 
+let data = dataset.monthlyVariance;
+
+const w = 1200;
+const h = 600;
+const padding = 30;
+
+let minDate = d3.min(data, d => d.year);
+let maxDate = d3.max(data, d => d.year);
+
+
+const xScale = d3.scaleTime()
+        .domain([new Date(minDate), new Date(maxDate)])
+        .range([padding, w-padding])
+
+const yScale = d3.scaleTime()
+        .domain([new Date(2020, 11, 31),new Date(2020, 0, 1)])
+        .range([h-padding,padding])
+    
