@@ -15783,18 +15783,19 @@ let data = dataset.monthlyVariance;
 
 const w = 1200;
 const h = 600;
-const padding = 30;
+const padding = 60;
 
 let minDate = d3.min(data, d => d.year);
 let maxDate = d3.max(data, d => d.year);
 
+console.log(minDate,maxDate)
 
 const xScale = d3.scaleTime()
         .domain([new Date(minDate), new Date(maxDate)])
         .range([padding, w-padding])
 
-const yScale = d3.scaleTime()
-        .domain([new Date(2020, 11, 31),new Date(2020, 0, 1)])
+const yScale = d3.scaleLinear()
+        .domain([12,0])
         .range([h-padding,padding])
 
 const svg = d3.select("div").append("svg").attr("height",h).attr("width",w);
@@ -15804,20 +15805,37 @@ svg.selectAll("rect")
     .enter()
     .append("rect")
     .attr("class","cell")
-    .style("height", d => h - yScale(d.month) - padding)
+    .style("height", d => ((h - padding)/12))
     .style("width", 10)
-    .attr("y", (d,i) => yScale(d.month))
+    .attr("y", (d,i) => yScale(d.month)-padding/1.5)
     .attr("x",(d,i) => xScale(d.year))
     .attr("fill", d => {
-        if(d.variance + dataset.baseTemperature <= 2.8 ){return "blue"}
+        if(d.variance + dataset.baseTemperature <= 2.8 ){return "rgb(49, 54, 149)"}
         else if (d.variance + dataset.baseTemperature <= 3.9){return "rgb(69, 117, 180)"}
         else if (d.variance + dataset.baseTemperature <= 5.0){return "rgb(116, 173, 209)"}
         else if (d.variance + dataset.baseTemperature <= 6.1){return "rgb(171, 217, 233)"}
         else if (d.variance + dataset.baseTemperature <= 7.2){return "rgb(224, 243, 248)"}
         else if (d.variance + dataset.baseTemperature <= 8.3){return "rgb(255, 255, 191)"}
         else if (d.variance + dataset.baseTemperature <= 9.5){return "rgb(254, 224, 144)"}
-        else if (d.variance + dataset.baseTemperature <= 10.){return "rgb(253, 174, 97)"}
-        else if (d.variance + dataset.baseTemperature <= 11.){return "rgb(244, 109, 67)"}
-        else if (d.variance + dataset.baseTemperature <= 12.){return  "rgb(215, 48, 39)"}
+        else if (d.variance + dataset.baseTemperature <= 10.6){return "rgb(253, 174, 97)"}
+        else if (d.variance + dataset.baseTemperature <= 11.7){return "rgb(244, 109, 67)"}
+        else if (d.variance + dataset.baseTemperature <= 12.8){return  "rgb(215, 48, 39)"}
         else if (d.variance + dataset.baseTemperature > 12.8){return "rgb(165, 0, 38)"}
     })
+    .attr("data-month",d => d.month)
+    .attr("data-year",d => d.year)
+    .attr("data-temp",d => d.variance + dataset.baseTemperature)
+
+
+const yAxis = d3.axisLeft(yScale);
+const xAxis = d3.axisBottom(xScale);
+
+svg.append("g")
+    .attr("id", "y-axis")
+    .attr("transform", "translate(" + padding + ",0)")
+    .call(yAxis)
+
+svg.append("g")
+    .attr("id", "x-axis")
+    .attr("transform", "translate(0," + (h - padding) + ")")
+    .call(xAxis)
