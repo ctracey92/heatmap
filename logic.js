@@ -15796,4 +15796,28 @@ const xScale = d3.scaleTime()
 const yScale = d3.scaleTime()
         .domain([new Date(2020, 11, 31),new Date(2020, 0, 1)])
         .range([h-padding,padding])
-    
+
+const svg = d3.select("div").append("svg").attr("height",h).attr("width",w);
+
+svg.selectAll("rect")
+    .data(data)
+    .enter()
+    .append("rect")
+    .attr("class","cell")
+    .style("height", d => h - yScale(d.month) - padding)
+    .style("width", 10)
+    .attr("y", (d,i) => yScale(d.month))
+    .attr("x",(d,i) => xScale(d.year))
+    .attr("fill", d => {
+        if(d.variance + dataset.baseTemperature <= 2.8 ){return "blue"}
+        else if (d.variance + dataset.baseTemperature <= 3.9){return "rgb(69, 117, 180)"}
+        else if (d.variance + dataset.baseTemperature <= 5.0){return "rgb(116, 173, 209)"}
+        else if (d.variance + dataset.baseTemperature <= 6.1){return "rgb(171, 217, 233)"}
+        else if (d.variance + dataset.baseTemperature <= 7.2){return "rgb(224, 243, 248)"}
+        else if (d.variance + dataset.baseTemperature <= 8.3){return "rgb(255, 255, 191)"}
+        else if (d.variance + dataset.baseTemperature <= 9.5){return "rgb(254, 224, 144)"}
+        else if (d.variance + dataset.baseTemperature <= 10.){return "rgb(253, 174, 97)"}
+        else if (d.variance + dataset.baseTemperature <= 11.){return "rgb(244, 109, 67)"}
+        else if (d.variance + dataset.baseTemperature <= 12.){return  "rgb(215, 48, 39)"}
+        else if (d.variance + dataset.baseTemperature > 12.8){return "rgb(165, 0, 38)"}
+    })
