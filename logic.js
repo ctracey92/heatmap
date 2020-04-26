@@ -15813,6 +15813,8 @@ const yScale = d3.scaleLinear()
 
 const svg = d3.select("div").append("svg").attr("height",h).attr("width",w);
 
+let tooltip = d3.select("body").append("div").attr("class", "toolTip");
+
 svg.selectAll("rect")
     .data(data)
     .enter()
@@ -15838,6 +15840,16 @@ svg.selectAll("rect")
     .attr("data-month",d => d.month-1)
     .attr("data-year",d => d.year)
     .attr("data-temp",d => d.variance + dataset.baseTemperature)
+    .on("mouseover",d => {
+        tooltip
+              .style("left", d3.event.pageX - 100 + "px")
+              .style("top", d3.event.pageY - 100 + "px")
+              .style("display", "inline-block")
+              .html(`${d.year} - ${months[d.month-1]}<br>${Math.floor((dataset.baseTemperature+d.variance)*100)/100}°C<br>${d.variance}°C`);
+    })
+    .on("mouseout",d => {
+        tooltip.style("display","none")
+    })
 
 
 const yAxis = d3.axisLeft(yScale).tickFormat((d)=>months[d-1])
