@@ -15770,97 +15770,189 @@ const dataset = {
   ],
 };
 
-/*
-Sample Data:
-    {
-      year: 1753,
-      month: 1,
-      variance: -1.366,
-    },
-*/
-
 let data = dataset.monthlyVariance;
 
-const w = 1800;
+const w = 1500;
 const h = 600;
 const padding = 60;
 
-const months =[
-	'Jan',
-	'Feb',
-	'Mar',
-	'Apr',
-	'May',
-	'Jun',
-	'Jul',
-	'Aug',
-	'Sep',
-	'Oct',
-	'Nov',
-	'Dec'
-]
+const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
-let minDate = new Date(data[0].year,data[0].month-1);
-let maxDate = new Date(data[data.length-1].year+5,data[data.length-1].month-1);
+let minDate = new Date(data[0].year, data[0].month - 1);
+let maxDate = new Date(
+  data[data.length - 1].year + 5,
+  data[data.length - 1].month - 1
+);
 
-const xScale = d3.scaleLinear()
-        .domain([data[0].year,data[data.length-1].year+5])
-        .range([padding, w-padding])
+$("#description").text(
+  `${data[0].year} - ${data[data.length - 1].year}: base temperature ${
+    dataset.baseTemperature
+  } °C`
+);
 
-const yScale = d3.scaleLinear()
-        .domain([12.5,.5])
-        .range([h-padding,padding])
+const xScale = d3
+  .scaleLinear()
+  .domain([data[0].year, data[data.length - 1].year + 5])
+  .range([padding, w - padding]);
 
-const svg = d3.select("div").append("svg").attr("height",h).attr("width",w);
+const yScale = d3
+  .scaleLinear()
+  .domain([12.5, 0.5])
+  .range([h - padding, padding]);
 
-let tooltip = d3.select("body").append("div").attr("class", "toolTip");
+const svg = d3
+  .select("#chart")
+  .append("svg")
+  .attr("height", h)
+  .attr("width", w);
 
-svg.selectAll("rect")
-    .data(data)
-    .enter()
-    .append("rect")
-    .attr("class","cell")
-    .style("height", d => ((h - padding)/12))
-    .style("width", 10)
-    .attr("y", (d,i) => yScale(d.month-.5))
-    .attr("x",(d,i) => xScale(d.year))
-    .attr("fill", d => {
-        if(d.variance + dataset.baseTemperature <= 2.8 ){return "rgb(49, 54, 149)"}
-        else if (d.variance + dataset.baseTemperature <= 3.9){return "rgb(69, 117, 180)"}
-        else if (d.variance + dataset.baseTemperature <= 5.0){return "rgb(116, 173, 209)"}
-        else if (d.variance + dataset.baseTemperature <= 6.1){return "rgb(171, 217, 233)"}
-        else if (d.variance + dataset.baseTemperature <= 7.2){return "rgb(224, 243, 248)"}
-        else if (d.variance + dataset.baseTemperature <= 8.3){return "rgb(255, 255, 191)"}
-        else if (d.variance + dataset.baseTemperature <= 9.5){return "rgb(254, 224, 144)"}
-        else if (d.variance + dataset.baseTemperature <= 10.6){return "rgb(253, 174, 97)"}
-        else if (d.variance + dataset.baseTemperature <= 11.7){return "rgb(244, 109, 67)"}
-        else if (d.variance + dataset.baseTemperature <= 12.8){return  "rgb(215, 48, 39)"}
-        else if (d.variance + dataset.baseTemperature > 12.8){return "rgb(165, 0, 38)"}
-    })
-    .attr("data-month",d => d.month-1)
-    .attr("data-year",d => d.year)
-    .attr("data-temp",d => d.variance + dataset.baseTemperature)
-    .on("mouseover",d => {
-        tooltip
-              .style("left", d3.event.pageX - 100 + "px")
-              .style("top", d3.event.pageY - 100 + "px")
-              .style("display", "inline-block")
-              .html(`${d.year} - ${months[d.month-1]}<br>${Math.floor((dataset.baseTemperature+d.variance)*100)/100}°C<br>${d.variance}°C`);
-    })
-    .on("mouseout",d => {
-        tooltip.style("display","none")
-    })
+let tooltip = d3.select("#chart").append("div").attr("class", "toolTip");
 
+svg
+  .selectAll("rect")
+  .data(data)
+  .enter()
+  .append("rect")
+  .attr("class", "cell")
+  .style("height", (d) => (h - padding) / 12)
+  .style("width", 10)
+  .attr("y", (d, i) => yScale(d.month - 0.5))
+  .attr("x", (d, i) => xScale(d.year))
+  .attr("fill", (d) => {
+    if (d.variance + dataset.baseTemperature <= 2.8) {
+      return "rgb(49, 54, 149)";
+    } else if (d.variance + dataset.baseTemperature <= 3.9) {
+      return "rgb(69, 117, 180)";
+    } else if (d.variance + dataset.baseTemperature <= 5.0) {
+      return "rgb(116, 173, 209)";
+    } else if (d.variance + dataset.baseTemperature <= 6.1) {
+      return "rgb(171, 217, 233)";
+    } else if (d.variance + dataset.baseTemperature <= 7.2) {
+      return "rgb(224, 243, 248)";
+    } else if (d.variance + dataset.baseTemperature <= 8.3) {
+      return "rgb(255, 255, 191)";
+    } else if (d.variance + dataset.baseTemperature <= 9.5) {
+      return "rgb(254, 224, 144)";
+    } else if (d.variance + dataset.baseTemperature <= 10.6) {
+      return "rgb(253, 174, 97)";
+    } else if (d.variance + dataset.baseTemperature <= 11.7) {
+      return "rgb(244, 109, 67)";
+    } else if (d.variance + dataset.baseTemperature <= 12.8) {
+      return "rgb(215, 48, 39)";
+    } else if (d.variance + dataset.baseTemperature > 12.8) {
+      return "rgb(165, 0, 38)";
+    }
+  })
+  .attr("data-month", (d) => d.month - 1)
+  .attr("data-year", (d) => d.year)
+  .attr("data-temp", (d) => d.variance + dataset.baseTemperature)
+  .on("mouseover", (d) => {
+    tooltip
+      .style("left", d3.event.pageX + 50 + "px")
+      .style("top", d3.event.pageY - 100 + "px")
+      .style("position", "absolute")
+      .style("display", "flex")
+      .style("opacity", 0.9)
+      .style("background-color", "lightgrey")
+      .html(
+        `${d.year} - ${months[d.month - 1]}<br>${
+          Math.floor((dataset.baseTemperature + d.variance) * 100) / 100
+        }°C<br>${d.variance}°C`
+      );
+  })
+  .on("mouseout", (d) => {
+    tooltip.style("display", "none");
+  });
 
-const yAxis = d3.axisLeft(yScale).tickFormat((d)=>months[d-1])
+const yAxis = d3.axisLeft(yScale).tickFormat((d) => months[d - 1]);
 const xAxis = d3.axisBottom(xScale).tickFormat(d3.format("d"));
 
-svg.append("g")
-    .attr("id", "y-axis")
-    .attr("transform", "translate(" + padding + ",0)")
-    .call(yAxis.ticks(12))
+svg
+  .append("g")
+  .attr("id", "y-axis")
+  .attr("transform", "translate(" + padding + ",0)")
+  .call(yAxis.ticks(12));
 
-svg.append("g")
-    .attr("id", "x-axis")
-    .attr("transform", "translate(0," + (h - padding) + ")")
-    .call(xAxis.ticks(20))
+svg
+  .append("g")
+  .attr("id", "x-axis")
+  .attr("transform", "translate(0," + (h - padding) + ")")
+  .call(xAxis.ticks(20));
+
+svg
+  .append("text")
+  .attr("transform", "rotate(-90)")
+  .text("Months")
+  .attr("x", -350)
+  .attr("y", 15)
+  .style("font-size", 20 + "px");
+
+svg
+  .append("text")
+  .text("Years")
+  .attr("x", 750 - padding)
+  .attr("y", 600)
+  .style("font-size", 20 + "px");
+
+const threshold = d3
+  .scaleThreshold()
+  .domain([2.8, 3.9, 5.0, 6.1, 7.2, 8.3, 9.5, 10.6, 11.7, 12.8])
+  .range([
+    "rgb(49, 54, 149)",
+    "rgb(69, 117, 180)",
+    "rgb(116, 173, 209)",
+    "rgb(171, 217, 233)",
+    "rgb(224, 243, 248)",
+    "rgb(255, 255, 191)",
+    "rgb(254, 224, 144)",
+    "rgb(253, 174, 97)",
+    "rgb(244, 109, 67)",
+    "rgb(215, 48, 39)",
+    "rgb(165, 0, 38)",
+  ]);
+let x = d3.scaleLinear().domain([0,14]).range([0, 800]);
+
+let XAxis = d3
+  .axisBottom(x)
+  .tickSize(20,0)
+  .tickValues(threshold.domain())
+  .tickFormat(d3.format(".1f"));
+
+let g = d3.select("g").call(XAxis);
+
+g.select(".domain").remove();
+
+g.selectAll("rect")
+  .data(
+    threshold.range().map( (color) => {
+      var d = threshold.invertExtent(color);
+      if (d[0] == null) d[0] = x.domain()[0];
+      if (d[1] == null) d[1] = x.domain()[1];
+      return d;
+    })
+  )
+  .enter()
+  .insert("rect", ".tick")
+  .attr("height", 15)
+  .attr("x", (d) => {
+    return x(d[0]);
+  })
+  .attr("width", (d) => {
+    return x(d[1]) - x(d[0]);
+  })
+  .attr("fill", function (d) {
+    return threshold(d[0]);
+  });

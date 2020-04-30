@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="./styles.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="./bootstrap.css" />
     <title>Heat Map Example</title>
-</head>
-<body>
-    <h1 id="title">Heat Map</h1>
-    <p id="description">Some text about the map</p>
-    <div id="heatMap"></div>
-    
+  </head>
+  <body>
+    <div class="ml-5 pl-5">
+      <h1 id="title" class="text-center">Monthly Global Land-Surface Temperature</h1>
+      <p id="description" class="text-center"></p>
+      <div id="chart" ></div>
+    </div>
+
+    <script src="./jquery.js"></script>
+    <script src="bootstrap.bundle.min.js"></script>
     <script src="./d3.js"></script>
     <script src="./logic.js"></script>
-</body>
+  </body>
 </html>

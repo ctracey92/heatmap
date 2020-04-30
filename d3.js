@@ -6,7 +6,6 @@
     }(this, function (exports) { 'use strict';
     
     var version = "5.16.0";
-    
     function ascending(a, b) {
       return a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN;
     }
