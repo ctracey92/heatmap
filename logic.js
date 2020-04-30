@@ -15931,7 +15931,7 @@ let XAxis = d3
   .tickValues(threshold.domain())
   .tickFormat(d3.format(".1f"));
 
-let g = d3.select("g").call(XAxis);
+let g = d3.select("g").call(XAxis).attr("id", "legend");
 
 g.select(".domain").remove();
 
